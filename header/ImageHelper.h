@@ -2,22 +2,22 @@
 #define IMAGE_HELPER_H
 
 #include <string>
-#include "../header/Image.h"
+#include "../header/ImageRGB.h"
 #include "../header/Pixel.h"
 
 class ImageHelper
 {
 public:
 
-	static Image loadImage(const std::string& fileName);
+	static ImageRGB loadImageRGB(const std::string& fileName);
 
-	static void saveImage(const Image& image, const std::string& outputName);
+	static void saveImage(const ImageRGB& image, const std::string& outputName);
 
 private:
 	// raw data of format RGBA is assumed
 	static std::vector<Pixel> convertRawToPixelData(const std::vector<unsigned char>& rawData);
 
-	static std::vector<unsigned char> convertImageToRawData(const Image& image);
+	static std::vector<unsigned char> convertImageToRawData(const ImageRGB& image);
 };
 
 #endif

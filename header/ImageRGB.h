@@ -1,16 +1,16 @@
-#ifndef IMAGE_H
-#define IMAGE_H
+#ifndef IMAGE_RGB_H
+#define IMAGE_RGB_H
 
 #include <vector>
 
 #include "../header/Pixel.h"
 #include "../header/Size.h"
 
-class Image
+class ImageRGB
 {
 public:
-	Image();
-	Image(std::vector<Pixel> data, unsigned width, unsigned height);
+	ImageRGB();
+	ImageRGB(std::vector<Pixel> data, unsigned width, unsigned height);
 
 	unsigned width() const;
 	unsigned height() const;

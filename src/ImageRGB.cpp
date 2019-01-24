@@ -1,15 +1,15 @@
 #include <stdexcept>
 
-#include "../header/Image.h"
+#include "../header/ImageRGB.h"
 
-Image::Image() :
+ImageRGB::ImageRGB() :
 	m_data(std::vector<Pixel>()),
 	m_size(0,0)
 {
 
 }
 
-Image::Image(std::vector<Pixel> data, unsigned width, unsigned height) :
+ImageRGB::ImageRGB(std::vector<Pixel> data, unsigned width, unsigned height) :
 	m_data(data),
 	m_size(width,height)
 {
@@ -20,23 +20,23 @@ Image::Image(std::vector<Pixel> data, unsigned width, unsigned height) :
 
 }
 
-unsigned Image::width() const
+unsigned ImageRGB::width() const
 {
 	return m_size.Width;
 }
 
-unsigned Image::height() const
+unsigned ImageRGB::height() const
 {
 	return m_size.Height;
 }
 
-Pixel Image::at(unsigned row, unsigned col) const
+Pixel ImageRGB::at(unsigned row, unsigned col) const
 {
 	unsigned index = row * m_size.Width + col;
 	return m_data[index];
 }
 
-Pixel& Image::operator()(unsigned row, unsigned col)
+Pixel& ImageRGB::operator()(unsigned row, unsigned col)
 {
 	unsigned index = row * m_size.Width + col;
 	return m_data[index];

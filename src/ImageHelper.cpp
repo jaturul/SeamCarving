@@ -9,7 +9,7 @@ namespace
 	const int RGBA_WIDTH = 4;
 }
 
-Image ImageHelper::loadImage(const std::string& fileName)
+ImageRGB ImageHelper::loadImageRGB(const std::string& fileName)
 {
 	std::vector<unsigned char> rawData;
 	unsigned width;
@@ -23,7 +23,7 @@ Image ImageHelper::loadImage(const std::string& fileName)
 
 	std::vector<Pixel> imageData = convertRawToPixelData(rawData);
 
-	return Image(imageData, width, height);
+	return ImageRGB(imageData, width, height);
 }
 
 std::vector<Pixel> ImageHelper::convertRawToPixelData(const std::vector<unsigned char>& rawData)
@@ -45,7 +45,7 @@ std::vector<Pixel> ImageHelper::convertRawToPixelData(const std::vector<unsigned
 	return imageData;
 }
 
-void ImageHelper::saveImage(const Image& image, const std::string& imageName)
+void ImageHelper::saveImage(const ImageRGB& image, const std::string& imageName)
 {
 	std::vector<unsigned char> rawImageData = convertImageToRawData(image);
 	unsigned encodeError = lodepng::encode(imageName, rawImageData, image.width(), image.height());
@@ -56,7 +56,7 @@ void ImageHelper::saveImage(const Image& image, const std::string& imageName)
 	}
 }
 
-std::vector<unsigned char> ImageHelper::convertImageToRawData(const Image& image)
+std::vector<unsigned char> ImageHelper::convertImageToRawData(const ImageRGB& image)
 {
 	int dataSize = image.width() * image.height() * RGBA_WIDTH;
 	std::vector<unsigned char> rawData(dataSize);
