@@ -2,6 +2,7 @@
 #define SEAM_H
 
 #include <utility>
+#include "../header/Orientation.h"
 
 struct Coord2D
 {
@@ -25,7 +26,45 @@ private:
 
 struct Seam
 {
-	std::vector<Coord2D> Elements;
+public:
+	Seam(Orientation orientation): m_orientation(orientation) {}
+
+	Seam(std::vector<Coord2D> elements, Orientation orientation):
+		m_elements(elements),
+		m_orientation(orientation)
+	{
+
+	}
+
+	void addElement(Coord2D point)
+	{
+		m_elements.push_back(point);
+	}
+
+	Coord2D at(unsigned index) const
+	{
+		if (index >= m_elements.size())
+		{
+			throw "Wrong index provided!";
+		}
+
+		return m_elements.at(index);
+	}
+
+	int size() const
+	{
+		return m_elements.size();
+	}
+
+	Orientation orientation() const
+	{
+		return m_orientation;
+	}
+
+private:
+	Orientation m_orientation;
+	std::vector<Coord2D> m_elements;
+
 };
 
 #endif

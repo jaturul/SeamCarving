@@ -5,6 +5,7 @@
 
 #include "../header/Pixel.h"
 #include "../header/Size.h"
+#include "../header/Orientation.h"
 
 class ImageRGB
 {
@@ -18,6 +19,7 @@ public:
 	// indexes from range <0, width/height) are assumed!
 	Pixel at(unsigned row, unsigned col) const;
 	Pixel& operator()(unsigned row, unsigned col);
+	void RemoveSeam(std::vector<unsigned> pointsToRemove, Orientation orientation);
 
 private:
 

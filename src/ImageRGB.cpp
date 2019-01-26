@@ -41,3 +41,20 @@ Pixel& ImageRGB::operator()(unsigned row, unsigned col)
 	unsigned index = row * m_size.Width + col;
 	return m_data[index];
 }
+
+void ImageRGB::RemoveSeam(std::vector<unsigned> pointsToRemove, Orientation orientation)
+{
+	for (unsigned i = 0; i < pointsToRemove.size(); ++i)
+	{
+		m_data.erase(m_data.begin() + pointsToRemove[i]);
+	}
+
+	if (orientation == Orientation::Vertical)
+	{
+		m_size.Width--;
+	}
+	else if (orientation == Orientation::Horizontal)
+	{
+		m_size.Height--;
+	}
+}

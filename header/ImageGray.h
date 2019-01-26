@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "../header/Size.h"
+#include "../header/Orientation.h"
 
 class ImageGray
 {
@@ -17,6 +18,8 @@ public:
 	// indexes from range <0, width/height) are assumed!
 	int at(unsigned row, unsigned col) const;
 	int& operator()(unsigned row, unsigned col);
+
+	void RemoveSeam(std::vector<unsigned> pointsToRemove, Orientation orientation);
 
 private:
 

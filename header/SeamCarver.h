@@ -5,23 +5,23 @@
 #include "../header/ImageGray.h"
 #include "../header/Size.h"
 #include "../header/Seam.h"
+#include "../header/Orientation.h"
 
-enum class Orientation
-{
-	Horizontal = 1,
-	Vertical = 2
-};
+
 
 class SeamCarver
 {
 public:
 	static void resizeImage(ImageRGB& image, const Size& targetSize);
 
-private:
 	static ImageGray createCummulativeEnergyMap(const ImageGray& energyMap, Orientation orientation);
 	static Seam findSeam(const ImageGray& cummulativeEnergyMap, Orientation orientation);
 	static void removeSeam(ImageGray& image, const Seam& seam);
 	static void removeSeam(ImageRGB& image, const Seam& seam);
+
+private:
+	static std::vector<unsigned> convertSeamTo1DCoord(const Seam& seam, unsigned imageWidth);
+
 };
 
 #endif
