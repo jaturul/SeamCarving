@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "../header/ImageGray.h"
 
 ImageGray::ImageGray():
@@ -39,19 +40,72 @@ int& ImageGray::operator()(unsigned row, unsigned col)
 	return m_data[currentIndex];
 }
 
-void ImageGray::RemoveSeam(std::vector<unsigned> pointsToRemove, Orientation orientation)
+ImageGray ImageGray::neighbourhood(unsigned row, unsigned col) const
 {
-	for (unsigned i = 0; i < pointsToRemove.size(); ++i)
+	// Extracts a 3x3 image neighbourhood
+	// Areas outside image coordinates are set to border values
+	std::vector<int> neighbourhoodData( 3 * 3, 0);
+	ImageGray neighbourhood(neighbourhoodData, 3, 3);
+
+	for(int i = -1; i < 2; ++i)
 	{
-		m_data.erase(m_data.begin() + pointsToRemove[i]);
+		for(int j = -1; j < 2; ++j)
+		{
+			int currRow = std::max(0, int(row) + i);
+			currRow = std::min(currRow, int(height()) - 1);
+			int currCol = std::max(0, int(col) + j);
+			currCol = std::min(currCol, int(width()) - 1);
+			neighbourhood(i + 1, j + 1) = this->at(currRow, currCol);
+		}
 	}
 
+	return neighbourhood;
+}
+
+void swap(int& int1, int& int2)
+{
+	int buffer = int1;
+	int1 = int2;
+	int2 = buffer;
+}
+
+void ImageGray::removeSeam(const Seam& seam, Orientation orientation)
+{
 	if (orientation == Orientation::Vertical)
 	{
+		std::vector<unsigned> pointsToRemove = convertSeamTo1DCoord(seam, this->width());
+		std::sort(pointsToRemove.rbegin(), pointsToRemove.rend());
+		for (unsigned i = 0; i < pointsToRemove.size(); ++i)
+		{
+			m_data.erase(m_data.begin() + pointsToRemove[i]);
+		}
+
 		m_size.Width--;
 	}
 	else if (orientation == Orientation::Horizontal)
 	{
+		unsigned lastRow = height() - 1;
+		for (unsigned i = 0; i < seam.size(); ++i)
+		{
+			unsigned currentCol = seam.at(i).Col();
+			for(unsigned currentRow = seam.at(i).Row(); currentRow != lastRow; ++currentRow )
+			{
+				swap((*this)(currentRow, currentCol), (*this)(currentRow + 1, currentCol));
+			}
+		}
+
+		m_data.erase(m_data.begin() + lastRow * width(), m_data.end());
 		m_size.Height--;
 	}
+}
+
+std::vector<unsigned> ImageGray::convertSeamTo1DCoord(const Seam& seam, unsigned imageWidth)
+{
+	std::vector<unsigned> coordinates1D(seam.size());
+	for(int i = 0; i < seam.size(); ++i)
+	{
+		coordinates1D[i] = seam.at(i).Row() * imageWidth + seam.at(i).Col();
+	}
+
+	return coordinates1D;
 }

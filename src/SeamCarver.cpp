@@ -4,6 +4,7 @@
 #include "../header/SeamCarver.h"
 #include "../header/EnergyCalculator.h"
 #include "../header/Seam.h"
+#include "../header/ImageHelper.h" //DEBUG
 
 
 
@@ -13,16 +14,22 @@ void SeamCarver::resizeImage(ImageRGB& image, const Size& targetSize)
 	unsigned rowsToRemove = image.height() - targetSize.Height;
 	unsigned colsToRemove = image.width() - targetSize.Width;
 
+	std::string baseName = "images/seam";
 	ImageGray energyMap = EnergyCalculator::calculateEnergy(image);
 	for(unsigned i = 0; i < rowsToRemove; ++i)
 	{
 		ImageGray cummulativeEnergyMap = createCummulativeEnergyMap(energyMap, Orientation::Horizontal);
 
 		Seam currentSeam = findSeam(cummulativeEnergyMap, Orientation::Horizontal);
+		//DEBUG
+		image.markSeam(currentSeam);
+		ImageHelper::saveImage(image, baseName + std::to_string(i) + ".png");
 
-		removeSeam(image, currentSeam);
-		removeSeam(energyMap, currentSeam);
+//		removeSeam(image, currentSeam);
+//		removeSeam(energyMap, currentSeam);
 
+		image.removeSeam(currentSeam, Orientation::Horizontal);
+		energyMap.removeSeam(currentSeam, Orientation::Horizontal);
 	}
 
 	for(unsigned i = 0; i < colsToRemove; ++i)
@@ -30,9 +37,15 @@ void SeamCarver::resizeImage(ImageRGB& image, const Size& targetSize)
 		ImageGray cummulativeEnergyMap = createCummulativeEnergyMap(energyMap, Orientation::Vertical);
 
 		Seam currentSeam = findSeam(cummulativeEnergyMap, Orientation::Vertical);
+		//DEBUG
+		image.markSeam(currentSeam);
+		ImageHelper::saveImage(image, baseName + std::to_string(rowsToRemove + i) + ".png");
 
-		removeSeam(image, currentSeam);
-		removeSeam(energyMap, currentSeam);
+//		removeSeam(image, currentSeam);
+//		removeSeam(energyMap, currentSeam);
+
+		image.removeSeam(currentSeam, Orientation::Vertical);
+		energyMap.removeSeam(currentSeam, Orientation::Vertical);
 
 	}
 }
@@ -170,7 +183,8 @@ Seam SeamCarver::findSeam(const ImageGray& cummulativeEnergyMap, Orientation ori
 				minEnergy = cummulativeEnergyMap.at(middleRow, col);
 				currentMinEnergyRow = middleRow;
 			}
-			else if (cummulativeEnergyMap.at(bottomRow, col) < minEnergy)
+
+			if (cummulativeEnergyMap.at(bottomRow, col) < minEnergy)
 			{
 				minEnergy = cummulativeEnergyMap.at(bottomRow, col);
 				currentMinEnergyRow = bottomRow;
@@ -185,28 +199,28 @@ Seam SeamCarver::findSeam(const ImageGray& cummulativeEnergyMap, Orientation ori
 	}
 }
 
-void SeamCarver::removeSeam(ImageGray& image, const Seam& seam)
-{
-	std::vector<unsigned> coordinates1DToRemove = convertSeamTo1DCoord(seam, image.width());
-	std::sort(coordinates1DToRemove.rbegin(), coordinates1DToRemove.rend());
-	image.RemoveSeam(coordinates1DToRemove, seam.orientation());
-	//TODO
-}
+//void SeamCarver::removeSeam(ImageGray& image, const Seam& seam)
+//{
+//	std::vector<unsigned> coordinates1DToRemove = convertSeamTo1DCoord(seam, image.width());
+//	std::sort(coordinates1DToRemove.rbegin(), coordinates1DToRemove.rend());
+//	image.RemoveSeam(coordinates1DToRemove, seam.orientation());
+//	//TODO
+//}
+//
+//void SeamCarver::removeSeam(ImageRGB& image, const Seam& seam)
+//{
+//	std::vector<unsigned> coordinates1DToRemove = convertSeamTo1DCoord(seam, image.width());
+//	std::sort(coordinates1DToRemove.rbegin(), coordinates1DToRemove.rend());
+//	image.RemoveSeam(coordinates1DToRemove, seam.orientation());
+//}
 
-void SeamCarver::removeSeam(ImageRGB& image, const Seam& seam)
-{
-	std::vector<unsigned> coordinates1DToRemove = convertSeamTo1DCoord(seam, image.width());
-	std::sort(coordinates1DToRemove.rbegin(), coordinates1DToRemove.rend());
-	image.RemoveSeam(coordinates1DToRemove, seam.orientation());
-}
-
-std::vector<unsigned> SeamCarver::convertSeamTo1DCoord(const Seam& seam, unsigned imageWidth)
-{
-	std::vector<unsigned> coordinates1D(seam.size());
-	for(int i = 0; i < seam.size(); ++i)
-	{
-		coordinates1D[i] = int(seam.at(i).Row() * imageWidth + seam.at(i).Col());
-	}
-
-	return coordinates1D;
-}
+//std::vector<unsigned> SeamCarver::convertSeamTo1DCoord(const Seam& seam, unsigned imageWidth)
+//{
+//	std::vector<unsigned> coordinates1D(seam.size());
+//	for(int i = 0; i < seam.size(); ++i)
+//	{
+//		coordinates1D[i] = seam.at(i).Row() * imageWidth + seam.at(i).Col();
+//	}
+//
+//	return coordinates1D;
+//}

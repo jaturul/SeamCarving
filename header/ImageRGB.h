@@ -6,6 +6,7 @@
 #include "../header/Pixel.h"
 #include "../header/Size.h"
 #include "../header/Orientation.h"
+#include "../header/Seam.h" //DEBUG
 
 class ImageRGB
 {
@@ -19,10 +20,15 @@ public:
 	// indexes from range <0, width/height) are assumed!
 	Pixel at(unsigned row, unsigned col) const;
 	Pixel& operator()(unsigned row, unsigned col);
-	void RemoveSeam(std::vector<unsigned> pointsToRemove, Orientation orientation);
+	ImageRGB neighbourhood(unsigned row, unsigned col) const;
+	void removeSeam(const Seam& seam, Orientation orientation);
+
+
+	//DEBUG
+	void markSeam(const Seam& seam);
 
 private:
-
+	std::vector<unsigned> convertSeamTo1DCoord(const Seam& seam, unsigned imageWidth);
 	std::vector<Pixel> m_data;
 	Size m_size;
 };
