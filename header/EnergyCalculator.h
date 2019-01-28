@@ -10,7 +10,9 @@ class EnergyCalculator
 public:
 
 	static ImageGray calculateEnergy(const ImageRGB& image);
+	static ImageGray calculateEnergy(const ImageRGB& image, const ImageRGB& mask);
 	static ImageGray calculateEnergy(const ImageGray& image);
+	static ImageGray calculateEnergy(const ImageGray& image, const ImageRGB& mask);
 
 private:
 

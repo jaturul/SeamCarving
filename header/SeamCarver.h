@@ -12,16 +12,15 @@
 class SeamCarver
 {
 public:
-	static void resizeImage(ImageRGB& image, const Size& targetSize);
+	static void resizeImage(ImageRGB& image, ImageRGB& mask, const Size& targetSize);
+	//TODO - RESIZE IMAGE GRAY!!!!
 
+private:
 	static ImageGray createCummulativeEnergyMap(const ImageGray& energyMap, Orientation orientation);
 	static Seam findSeam(const ImageGray& cummulativeEnergyMap, Orientation orientation);
 	static void removeSeam(ImageGray& image, const Seam& seam);
 	static void removeSeam(ImageRGB& image, const Seam& seam);
-
-private:
-	static std::vector<unsigned> convertSeamTo1DCoord(const Seam& seam, unsigned imageWidth);
-
+	//static std::vector<unsigned> convertSeamTo1DCoord(const Seam& seam, unsigned imageWidth);
 };
 
 #endif
