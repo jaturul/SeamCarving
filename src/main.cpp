@@ -16,22 +16,36 @@
 #include "../header/SeamCarver.h"
 #include "../header/Orientation.h"
 #include "../header/EnergyCalculator.h"
+#include "../header/InputParser.h"
 
-using namespace std;
 
 int main(int argc, char** argv)
 {
-	std::string inputFile = "images/beach.png";
-	std::string energyMask = "images/beachMask.png";
+	try
+	{
+		std::vector<std::string> arguments = InputParser::parseInput(argc, argv);
+		ImageRGB input = ImageHelper::loadImageRGB(arguments[2]);
+		Size targetSize(std::stoi(arguments[1]), std::stoi(arguments[0]));
 
-	ImageRGB input = ImageHelper::loadImageRGB(inputFile);
-	ImageRGB mask = ImageHelper::loadImageRGB(energyMask);
+		SeamCarver carver;
+		if (arguments.size() == 5)
+		{
+			std::string energyMask = arguments[4];
+			ImageRGB mask = ImageHelper::loadImageRGB(energyMask);
+			carver.resizeImage(input, mask, targetSize);
+		}
+		else
+		{
+			carver.resizeImage(input, targetSize);
+		}
 
-	SeamCarver carver;
-	Size targetSize(input.width() * 0.8, input.height() * 0.8);
-	carver.resizeImage(input, mask, targetSize);
-	std::string outputFile = "images/output.png";
-	ImageHelper::saveImage(input, outputFile);
+		std::string outputFile = arguments[3];
+		ImageHelper::saveImage(input, outputFile);
+	}
+	catch(std::exception& e)
+	{
+		std::cout << e.what() << std::endl;
+	}
 
 	return 0;
 }

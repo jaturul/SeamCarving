@@ -13,6 +13,7 @@ class SeamCarver
 {
 public:
 	static void resizeImage(ImageRGB& image, ImageRGB& mask, const Size& targetSize);
+	static void resizeImage(ImageRGB& image, const Size& targetSize);
 	//TODO - RESIZE IMAGE GRAY!!!!
 
 private:

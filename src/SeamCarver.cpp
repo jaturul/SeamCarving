@@ -6,6 +6,41 @@
 #include "../header/Seam.h"
 #include "../header/ImageHelper.h" //DEBUG
 
+void SeamCarver::resizeImage(ImageRGB& image, const Size& targetSize)
+{
+	// for the moment, we assume only sizes smaller than the target size
+	unsigned rowsToRemove = image.height() - targetSize.Height;
+	unsigned colsToRemove = image.width() - targetSize.Width;
+
+	std::string baseName = "output/seam";
+	ImageGray energyMap = EnergyCalculator::calculateEnergy(image);
+	for(unsigned i = 0; i < rowsToRemove; ++i)
+	{
+		ImageGray cummulativeEnergyMap = createCummulativeEnergyMap(energyMap, Orientation::Horizontal);
+
+		Seam currentSeam = findSeam(cummulativeEnergyMap, Orientation::Horizontal);
+		//DEBUG
+		image.markSeam(currentSeam);
+		ImageHelper::saveImage(image, baseName + std::to_string(i) + ".png");
+
+		image.removeSeam(currentSeam, Orientation::Horizontal);
+		energyMap.removeSeam(currentSeam, Orientation::Horizontal);
+	}
+
+	for(unsigned i = 0; i < colsToRemove; ++i)
+	{
+		ImageGray cummulativeEnergyMap = createCummulativeEnergyMap(energyMap, Orientation::Vertical);
+
+		Seam currentSeam = findSeam(cummulativeEnergyMap, Orientation::Vertical);
+		//DEBUG
+		image.markSeam(currentSeam);
+		ImageHelper::saveImage(image, baseName + std::to_string(rowsToRemove + i) + ".png");
+
+		image.removeSeam(currentSeam, Orientation::Vertical);
+		energyMap.removeSeam(currentSeam, Orientation::Vertical);
+	}
+}
+
 void SeamCarver::resizeImage(ImageRGB& image, ImageRGB& mask, const Size& targetSize)
 {
 	// for the moment, we assume only sizes smaller than the target size
@@ -38,7 +73,6 @@ void SeamCarver::resizeImage(ImageRGB& image, ImageRGB& mask, const Size& target
 
 		image.removeSeam(currentSeam, Orientation::Vertical);
 		energyMap.removeSeam(currentSeam, Orientation::Vertical);
-
 	}
 }
 
