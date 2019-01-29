@@ -2,6 +2,7 @@
 #include <locale>
 #include <string>
 #include <vector>
+#include <iostream>
 
 #include "../header/Constants.h"
 #include "../header/InputParser.h"
@@ -25,10 +26,10 @@ std::vector<std::string> InputParser::parseInput(int argc, char ** argv)
 	// (4) (optional) energy mask file name
 
 	std::vector<std::string> rawInput = getRawInput(argc, argv);
-	std::vector<std::string> parsed_input(4);
+	std::vector<std::string> parsed_input;
 
 	// argument at index 0 is omitted as it's the name of the program which isn't needed
-	for (int argumentIndex = 1; argumentIndex < rawInput.size(); ++argumentIndex)
+	for (int argumentIndex = 1; argumentIndex < int(rawInput.size()); ++argumentIndex)
 	{
 		std::string currentArgument = rawInput[argumentIndex];
 		switch (argumentIndex)
@@ -40,8 +41,8 @@ std::vector<std::string> InputParser::parseInput(int argc, char ** argv)
 					throw "Invalid size provided!";
 				}
 
-				parsed_input[0] = getHeight(currentArgument);
-				parsed_input[1] = getWidth(currentArgument);
+				parsed_input.push_back(getHeight(currentArgument));
+				parsed_input.push_back(getWidth(currentArgument));
 
 				break;
 			}
@@ -54,7 +55,7 @@ std::vector<std::string> InputParser::parseInput(int argc, char ** argv)
 					throw "Invalid size provided!";
 				}
 
-				parsed_input[argumentIndex] = currentArgument;
+				parsed_input.push_back(currentArgument);
 
 				break;
 			}

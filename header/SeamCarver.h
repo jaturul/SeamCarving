@@ -18,10 +18,10 @@ public:
 
 private:
 	static ImageGray createCummulativeEnergyMap(const ImageGray& energyMap, Orientation orientation);
+	static std::vector<Orientation> getRemovalOrder(int rowsToRemove, int colsToRemove);
+
 	static Seam findSeam(const ImageGray& cummulativeEnergyMap, Orientation orientation);
-	static void removeSeam(ImageGray& image, const Seam& seam);
-	static void removeSeam(ImageRGB& image, const Seam& seam);
-	//static std::vector<unsigned> convertSeamTo1DCoord(const Seam& seam, unsigned imageWidth);
+	static void removeSeams(ImageRGB& image, ImageGray& energyMap, const Size& targetSize);
 };
 
 #endif

@@ -54,13 +54,9 @@ ImageRGB ImageRGB::neighbourhood(unsigned row, unsigned col) const
 	{
 		for(int j = -1; j < 2; ++j)
 		{
-//			if ( (row + i < 0) || (row + i > m_size.Height - 1) ||
-//				 (col + j < 0) || (col + j > m_size.Width - 1) )
-//			{
-//				continue;
-//			}
 			int currRow = std::max(0, int(row) + i);
 			currRow = std::min(currRow, int(height()) - 1);
+
 			int currCol = std::max(0, int(col) + j);
 			currCol = std::min(currCol, int(width()) - 1);
 
